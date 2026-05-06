@@ -12,8 +12,11 @@ for (( INDEX=0; INDEX<${#ARGUMENTS[@]}; INDEX++ )); do
   echo "Argument \"$ARGUMENT\" is empty!"; exit $((100+INDEX)); fi
 done
 
+if [[ ! "${TG_CHAT_ID}" =~ ^-?[0-9]+$ ]]; then
+ echo 'Wrong chat id!'; exit 1; fi
+
 REQUEST_BODY="{
- \"parse_mode\": \"markdown\",
+ \"parse_mode\": \"Markdown\",
  \"link_preview_options\": {
   \"is_disabled\": true
  },
