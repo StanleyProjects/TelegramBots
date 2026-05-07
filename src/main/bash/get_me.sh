@@ -3,21 +3,21 @@
 if test $# -ne 1; then
  echo 'Wrong arguments!'; exit 1; fi
 
-TG_FILEPATH="$1"
+TG_OUTPUT="$1"
 
-ARGUMENTS=(TG_BOT_ID TG_BOT_TOKEN TG_FILEPATH)
+ARGUMENTS=(TG_BOT_ID TG_BOT_TOKEN TG_OUTPUT)
 for (( INDEX=0; INDEX<${#ARGUMENTS[@]}; INDEX++ )); do
  ARGUMENT="${ARGUMENTS[INDEX]}"
  if test -z "${!ARGUMENT}"; then
   echo "Argument \"${ARGUMENT}\" is empty!"; exit $((100+INDEX)); fi
 done
 
-if test -f "${TG_FILEPATH}"; then
- echo "File \"${TG_FILEPATH}\" exists!"; exit 1; fi
+if test -f "${TG_OUTPUT}"; then
+ echo "File \"${TG_OUTPUT}\" exists!"; exit 1; fi
 
 # https://core.telegram.org/bots/api#getme
 
-CODE=$(curl -m 8 -w '%{http_code}' -o "${TG_FILEPATH}" \
+CODE=$(curl -m 8 -w '%{http_code}' -o "${TG_OUTPUT}" \
  "https://api.telegram.org/bot${TG_BOT_ID}:${TG_BOT_TOKEN}/getMe")
 
 if test $? -ne 0; then
@@ -26,13 +26,13 @@ if test $? -ne 0; then
 if [[ "${CODE}" != '200' ]]; then
  echo 'Get me error!'; exit 1; fi
 
-if [[ ! -f "${TG_FILEPATH}" ]]; then
- echo "No file \"${TG_FILEPATH}\"!"; exit 1
-elif [[ ! -s "${TG_FILEPATH}" ]]; then
- echo "File \"${TG_FILEPATH}\" is empty!"; exit 1
+if [[ ! -f "${TG_OUTPUT}" ]]; then
+ echo "No file \"${TG_OUTPUT}\"!"; exit 1
+elif [[ ! -s "${TG_OUTPUT}" ]]; then
+ echo "File \"${TG_OUTPUT}\" is empty!"; exit 1
 fi
 
-TG_CHECKS="$(yq -e '.ok // false' "${TG_FILEPATH}" 2>/dev/null)"
+TG_CHECKS="$(yq -e '.ok // false' "${TG_OUTPUT}" 2>/dev/null)"
 
 if test $? -ne 0; then
  echo 'Parse error!'; exit 1; fi
@@ -40,7 +40,7 @@ if test $? -ne 0; then
 if [[ "${TG_CHECKS}" != 'true' ]]; then
  echo 'Check error!'; exit 1; fi
 
-RESPONSE_BOT_ID="$(yq -e '.result.id // ""' "${TG_FILEPATH}" 2>/dev/null)"
+RESPONSE_BOT_ID="$(yq -e '.result.id // ""' "${TG_OUTPUT}" 2>/dev/null)"
 
 if test $? -ne 0; then
  echo 'Parse error!'; exit 1; fi
