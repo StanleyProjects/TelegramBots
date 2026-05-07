@@ -17,7 +17,7 @@ done
 if [[ ! "${TG_CHAT_ID}" =~ ^-?[0-9]+$ ]]; then
  echo 'Wrong chat id!'; exit 1; fi
 
-if [[ ! "${TG_TOPIC_ID}" =~ ^[1-9][0-9]?$ ]]; then
+if [[ ! "${TG_TOPIC_ID}" =~ ^[1-9][0-9]*$ ]]; then
  echo 'Wrong topic id!'; exit 1; fi
 
 REQUEST_BODY="{
