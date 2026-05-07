@@ -41,3 +41,26 @@ ACTUAL_VALUE="$(TG_BOT_ID=0 TG_BOT_TOKEN=0 ${ISSUER} 0 0 '')"
 ACTUAL_VALUE="$(TG_BOT_ID=0 TG_BOT_TOKEN=0 ${ISSUER} x 0 0)"
 . $asserts/ne.sh $? 0
 . $asserts/eq.sh "${ACTUAL_VALUE}" 'Wrong chat id!'
+
+ACTUAL_VALUE="$(TG_BOT_ID=0 TG_BOT_TOKEN=0 ${ISSUER} 0 abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a 0)"
+. $asserts/ne.sh $? 0
+. $asserts/eq.sh "${ACTUAL_VALUE}" 'Wrong topic name!'
+
+POINTER="$(TZ=utc LC_ALL=C date +%Y%m%d%H%M%S%3N)"
+TEST_OUTPUT="/tmp/${POINTER}.txt"
+
+echo 'foo bar baz' > "${TEST_OUTPUT}"
+[[ -f "${TEST_OUTPUT}" && -s "${TEST_OUTPUT}" ]] || exit 1
+
+ACTUAL_VALUE="$(TG_BOT_ID=0 TG_BOT_TOKEN=0 ${ISSUER} 0 0 "${TEST_OUTPUT}")"
+. $asserts/ne.sh $? 0
+. $asserts/eq.sh "${ACTUAL_VALUE}" "File \"${TEST_OUTPUT}\" exists!"
+
+echo -n '' > "${TEST_OUTPUT}"
+[[ -f "${TEST_OUTPUT}" && ! -s "${TEST_OUTPUT}" ]] || exit 1
+
+ACTUAL_VALUE="$(TG_BOT_ID=0 TG_BOT_TOKEN=0 ${ISSUER} 0 0 "${TEST_OUTPUT}")"
+. $asserts/ne.sh $? 0
+. $asserts/eq.sh "${ACTUAL_VALUE}" "File \"${TEST_OUTPUT}\" exists!"
+
+rm "${TEST_OUTPUT}"
