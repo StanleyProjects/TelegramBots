@@ -20,4 +20,4 @@ ACTUAL_VALUE="$(TG_BOT_ID=0 TG_BOT_TOKEN='' ${ISSUER} '')"
 
 ACTUAL_VALUE="$(TG_BOT_ID=0 TG_BOT_TOKEN=0 ${ISSUER} '')"
 . $asserts/ne.sh $? 0
-. $asserts/eq.sh "${ACTUAL_VALUE}" 'Argument "TG_FILEPATH" is empty!'
+. $asserts/eq.sh "${ACTUAL_VALUE}" 'Argument "TG_OUTPUT" is empty!'
