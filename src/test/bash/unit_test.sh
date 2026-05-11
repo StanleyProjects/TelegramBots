@@ -8,6 +8,7 @@ tgbots="src/main/bash"
 . $tests/license_test.sh
 . $tests/create_forum_topic_test.sh
 . $tests/edit_topic_emoji_test.sh
+. $tests/get_file_test.sh
 . $tests/get_me_test.sh
 . $tests/get_topic_stickers_test.sh
 . $tests/get_updates_test.sh
